@@ -41,7 +41,22 @@ def acquire_token():
     return token
 
 client = GraphClient(acquire_token)
+
+# Add permission to write files
+tenant_name = "{sharepoint_host_name}"
+
+drives = client.drives.get().execute_query()
+for drive in drives:
+    print("Drive url: {0}".format(drive.web_url))
+
+# Content-Type: application/json
+# write = {"roles": ["write"],"grantedToIdentities": [{"application": {"id": f"{client_id}","displayName": "S9-OneDrive"}}]}
+# https://graph.microsoft.com/v1.0/sites/{siteId}/permissions
+
+
 drive = client.sites.get_by_url(tenant_url).drive.root.get_by_path(upload_path)
+
+
 
 def progress_status(offset, file_size):
     print(f"Uploaded {offset} bytes from {file_size} bytes ... {offset/file_size*100:.2f}%")
